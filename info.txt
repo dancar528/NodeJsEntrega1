@@ -1,0 +1,7 @@
+Curso: Matematicas
+Id: 1
+Duracion: 40 h
+Valor: 200 milDuracion: 40 h
+
+Nombre: juan
+Cedula: 2123123

@@ -1,0 +1,11 @@
+{
+  "name": "entrega1",
+  "version": "1.0.1",
+  "description": "Primer entrega curso fundamentos NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniela <dancar.528@gmail.com> (https://twitter/dcardoh)",
+  "license": "ISC"
+}
