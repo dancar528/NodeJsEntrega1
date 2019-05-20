@@ -37,71 +37,69 @@ let opciones = {
 };
 
 const argv = require('yargs')
-	.command('prematricular', 'Ingresar alumno', opciones)
-	.command('inscribir', 'Inscribir alumno', opciones, function(argv){
-		let alumno = {
-			nombre: argv.nombre_interesado,
-			cedula: argv.cedula,
-			cursos: {
-				id_curso: argv.id_curso 
-			}
-		};
-		alumnos.push(alumno);
-		//console.log(alumnos);
-	})
-	.command('cursos', 'Lista de cursos', opciones, function(argv){
-
-	})
+	.command('inscribir', 'Inscribir alumno', opciones)
 	.argv;
-const fs = require('fs');
 
-let curso = cursos.find( curso => curso.id == argv.id);
 
-let crearArchivo = (text) => {
-	fs.writeFile('info.txt', text, (err) => {
-		if (err) throw (err);
-		console.log('Se ha creado el archivo');
+if (typeof argv.id === 'undefined') {
+	let i = -1;
+	let listarCursos = (index, callback) => {
+		setTimeout(function() {
+			if (index < cursos.length - 1) {
+				index++;
+				listarCursos(index, function(resultado){
+					let text = `Curso: ${cursos[resultado].nombre}\n`
+						+ `Id: ${cursos[resultado].id}\n`
+						+ `Duracion: ${cursos[resultado].duracion}\n`
+						+ `Valor: ${cursos[resultado].valor}\n\n`;
+					console.log(text);
+				});
+
+				callback(index);
+			}	
+		}, 2000);
+	};
+
+
+	listarCursos(i, function(resultado){
+		let text = `\nCurso: ${cursos[resultado].nombre}\n`
+			+ `Id: ${cursos[resultado].id}\n`
+			+ `Duracion: ${cursos[resultado].duracion}\n`
+			+ `Valor: ${cursos[resultado].valor}\n\n`;
+		console.log(text);
 	});
-};
-
-if (typeof curso !== 'undefined'){
-	console.log(curso);
-
-	let text = `Curso: ${curso.nombre}\n`
-		+ `Id: ${curso.id}\n`
-		+ `Duracion: ${curso.duracion}\n`
-		+ `Valor: ${curso.valor}\n\n`
-		+ `Nombre: ${argv.nombre}\n`
-		+ `Cedula: ${argv.doc}`;
-
-	crearArchivo(text);
 } else {
-	console.log('No existe curso con el ID especificado');
+	const fs = require('fs');
+
+	let curso = cursos.find(curso => curso.id == argv.id);
+
+	let crearArchivo = (text) => {
+		fs.writeFile('info.txt', text, (err) => {
+			if (err) throw (err);
+			console.log('Se ha creado el archivo');
+		});
+	};
+
+	if (typeof curso !== 'undefined'){
+
+		let text = `\nCurso: ${curso.nombre}\n`
+			+ `Id: ${curso.id}\n`
+			+ `Duracion: ${curso.duracion}\n`
+			+ `Valor: ${curso.valor}\n\n`
+			+ `Nombre: ${argv.nombre}\n`
+			+ `Cedula: ${argv.doc}\n`;
+
+		console.log(text);
+		crearArchivo(text);
+	} else {
+		console.log('\nNo existe curso con el ID especificado\n\n');
+
+		for (let i = 0; i < cursos.length; i++) {
+			let text = `Curso: ${cursos[i].nombre}\n`
+				+ `Id: ${cursos[i].id}\n`
+				+ `Duracion: ${cursos[i].duracion}\n`
+				+ `Valor: ${cursos[i].valor}\n\n`;
+			console.log(text);
+		}
+	}
 }
-
-let i = -1;
-let listarCursos = (index, callback) => {
-	setTimeout(function() {
-		if (index < cursos.length - 1) {
-			index++;
-			listarCursos(index, function(resultado){
-				let text = `Curso: ${cursos[resultado].nombre}\n`
-					+ `Id: ${cursos[resultado].id}\n`
-					+ `Duracion: ${cursos[resultado].duracion}\n`
-					+ `Valor: ${cursos[resultado].valor}\n\n`;
-				console.log(text);
-			});
-
-			callback(index);
-		}	
-	}, 2000);
-};
-
-
-listarCursos(i, function(resultado){
-	let text = `Curso: ${cursos[resultado].nombre}\n`
-		+ `Id: ${cursos[resultado].id}\n`
-		+ `Duracion: ${cursos[resultado].duracion}\n`
-		+ `Valor: ${cursos[resultado].valor}\n\n`;
-	console.log(text);
-});
